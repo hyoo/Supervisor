@@ -69,14 +69,17 @@ MODEL_CMD="python ${arg_array[@]}"
 set +e
 echo $MODEL_CMD
 
+CHECK_FILE="check.txt"
+
 $TIMEOUT_CMD python "${arg_array[@]}"
 
 
 RES=$?
 if [ "$RES" -ne 0 ]; then
 	if [ "$RES" == 124 ]; then
-    echo "---> Timeout error in $MODEL_CMD"
+    echo "Timeout error" > $CHECK_FILE
   else
-	   echo "---> Error in $MODEL_CMD"
+	   echo "Error" > $CHECK_FILE
   fi
 fi
+touch $CHECK_FILE

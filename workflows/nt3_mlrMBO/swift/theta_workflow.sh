@@ -93,6 +93,8 @@ CMD_LINE_ARGS="$* -pp=$PROPOSE_POINTS -mi=$MAX_ITERATIONS -mb=$MAX_BUDGET -ds=$D
 CMD_LINE_ARGS+="-param_set_file=$PARAM_SET_FILE -script_file=$EMEWS_PROJECT_ROOT/scripts/theta_run_model.sh "
 CMD_LINE_ARGS+="-model_name=$MODEL_NAME "
 CMD_LINE_ARGS+="-exp_id=$EXPID -log_script=$EMEWS_PROJECT_ROOT/../common/sh/theta_run_logger.sh"
+# UNCOMMENT for setting timout (in seconds)
+#CMD_LINE_ARGS+="-to=7200"
 
 TURBINE_DIR=/home/wozniak/Public/sfw/theta/swift-t-pyr/turbine/lib
 

@@ -21,6 +21,7 @@ string model_name = argv("model_name");
 file model_script = input(argv("script_file"));
 file log_script = input(argv("log_script"));
 string exp_id = argv("exp_id");
+string timeout = argv("to","");
 
 string FRAMEWORK = "keras";
 
@@ -29,9 +30,9 @@ string algo_params_template =
 max.budget = %d, max.iterations = %d, design.size=%d, propose.points=%d, param.set.file='%s'
 """;
 
-app (file out, file err) run_model (file shfile, string params_string, string instance, string run_id)
+app (file out, file err) run_model (file shfile, string params_string, string instance, string run_id, string to)
 {
-    "bash" shfile params_string emews_root instance model_name FRAMEWORK exp_id run_id @stdout=out @stderr=err;
+    "bash" shfile params_string emews_root instance model_name FRAMEWORK exp_id run_id to @stdout=out @stderr=err;
 }
 
 
@@ -76,9 +77,14 @@ app (file out, file err) run_log_end(file shfile)
   //printf("%s", params);
   //string fname = "%s/params.json" % outdir =>
   //file params_file <fname> = write(params) =>
-  (out,err) = run_model(model_script, params, outdir, iter_indiv_id) =>
-  file line = input("%s/result.txt" % outdir) =>
-  obj_result = trim(read(line));
+  (out,err) = run_model(model_script, params, outdir, iter_indiv_id, timeout) =>
+  string check = read("%s/check.txt" % outdir);
+  if (find(check, "Timeout", 0, -1) == -1){
+    file line = input("%s/result.txt" % outdir) =>
+    obj_result = trim(read(line));
+  } else {
+    obj_result = "NaN";
+  }
   printf(obj_result);
 }
 
